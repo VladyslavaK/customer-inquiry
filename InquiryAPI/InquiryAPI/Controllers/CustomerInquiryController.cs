@@ -1,9 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Domain;
+﻿using Domain.Interfaces;
+using Domain.Models;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace InquiryAPI.Controllers
 {
@@ -11,23 +12,45 @@ namespace InquiryAPI.Controllers
     [ApiController]
     public class CustomerInquiryController : ControllerBase
     {
-        [HttpGet("{id}")]
-        public ActionResult<Customer> Get(int id)
-        {
-            return Ok(new Customer());
-        }
+        private readonly ICustomersRepository _customersRepository;
 
-        [HttpGet("{email}")]
-        public ActionResult<Customer> Get(string email)
+        public CustomerInquiryController(ICustomersRepository customersRepository)
         {
-            return Ok(new Customer());
+            _customersRepository = customersRepository;
         }
 
         [HttpGet]
-        public ActionResult<Customer> Get([FromQuery]int id, [FromQuery]string email)
+        public async Task<ActionResult<Customer>> Get([FromQuery]long? id, [FromQuery]string email)
         {
-            return Ok(new Customer());
+            var request = new CustomerInquiryRequest() { CustomerID = id, Email = email };
+            if (!TryValidateModel(request))
+            {
+                return BadRequest(GetErrors());
+            }
+            
+            var result = await _customersRepository.GetCustomersTransactionsAsync(request);
+
+            if (result == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(result);
         }
 
+        private string GetErrors()
+        {
+            var errors = new StringBuilder();
+            foreach (var modelState in ModelState.Values)
+            {
+                foreach (var modelError in modelState.Errors)
+                {
+                    errors.Append(modelError.ErrorMessage);
+                    errors.AppendLine();
+                }
+            }
+
+                return errors.ToString();
+        }
     }
 }
