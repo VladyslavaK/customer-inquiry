@@ -1,0 +1,32 @@
+version: "3"
+
+services:
+  api:
+    build:     
+      context: ./InquiryAPI
+      dockerfile: Dockerfile
+    environment:
+     - ASPNETCORE_ENVIRONMENT=Development
+     - ASPNETCORE_URLS=http://*:5000
+     - CONN_STRING=Server=db;Database=Inquiry;User=sa;Password=Aruba2019;
+    volumes: 
+     - ./InquiryAPI/.:/app
+    depends_on:
+      - db
+    ports:
+      - 5001:5001
+      - 5000:5000
+
+  db:
+    build:
+      context: ./
+      dockerfile: Dockerfile-db
+    ports:
+      - "1435:1433"
+    environment:
+      SA_PASSWORD: "Aruba2019"
+    healthcheck:
+      test: sqlcmd -S localhost -U SA -P 'Aruba2019' -Q 'select 1'
+      interval: 1m30s
+      timeout: 10s
+      retries: 3  
