@@ -23,7 +23,9 @@ namespace InquiryAPI.Controllers
         public async Task<ActionResult<Customer>> Get([FromQuery]long? id, [FromQuery]string email)
         {
             var request = new CustomerInquiryRequest() { CustomerID = id, Email = email };
-            if (!TryValidateModel(request))
+
+            if ((id == null && string.IsNullOrEmpty(email)) 
+                || !TryValidateModel(request))
             {
                 return BadRequest(GetErrors());
             }
