@@ -30,7 +30,8 @@ namespace Infrastructure
         {
             return new List<Customer>()
             {
-                new Customer() {CustomerID = 1, CustomerName = "John Snow", Email="john@mail.com", MobileNumber = 1234567890 }
+                new Customer() {CustomerID = 1234569870, CustomerName = "John Snow", Email="john@mail.com", MobileNumber = 1234567890 }
+                ,new Customer() {CustomerID = 0123456987, CustomerName = "John Twin", Email="john@mail.com", MobileNumber = 1234567890 }
                 ,new Customer() { CustomerID = 1234567890, CustomerName = "John Smith", Email="john.smith@mail.com", MobileNumber = 1234567890,
                     Transactions = new List<Transaction>()
                     {

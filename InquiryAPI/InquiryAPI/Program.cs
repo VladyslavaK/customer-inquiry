@@ -16,28 +16,30 @@ namespace InquiryAPI
     {
         public static void Main(string[] args)
         {
-            //CreateWebHostBuilder(args).Build().Run();
-            var host = CreateWebHostBuilder(args);
+            var host = CreateWebHostBuilder(args); 
 
-            using (var scope = host.Services.CreateScope())
+            var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+            if (env.Equals("Development", StringComparison.InvariantCultureIgnoreCase))
             {
-                var services = scope.ServiceProvider;
-
-                try
+                using (var scope = host.Services.CreateScope())
                 {
-                    DbSeed.SeedAsync(services)
-                        .Wait();
+                    var services = scope.ServiceProvider;
 
-                }
-                catch (Exception ex)
-                {
-                    var logger = services.GetRequiredService<ILogger<Program>>();
-                    logger.LogError(ex, "An error occurred seeding the DB.");
+                    try
+                    {
+                        DbSeed.SeedAsync(services)
+                            .Wait();
+
+                    }
+                    catch (Exception ex)
+                    {
+                        var logger = services.GetRequiredService<ILogger<Program>>();
+                        logger.LogError(ex, "An error occurred seeding the DB.");
+                    }
                 }
             }
 
             host.Run();
-
         }
 
         public static IWebHost CreateWebHostBuilder(string[] args) =>

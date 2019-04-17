@@ -20,7 +20,7 @@ namespace Infrastructure
         }
         public async Task<Customer> GetCustomersTransactionsAsync(CustomerInquiryRequest request)
         {
-            return await _context.Customers.Include(c => c.Transactions).FirstOrDefaultAsync<Customer>(c => c.CustomerID == request.CustomerID.Value 
+            return await _context.Customers.Include(c => c.Transactions).SingleOrDefaultAsync<Customer>(c => c.CustomerID == request.CustomerID.Value 
                                                 || c.Email.Equals(request.Email, StringComparison.InvariantCultureIgnoreCase));
         }
 

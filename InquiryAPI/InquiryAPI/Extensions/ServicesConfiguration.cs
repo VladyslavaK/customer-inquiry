@@ -3,15 +3,11 @@ using Infrastructure;
 using Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace InquiryAPI
+namespace InquiryAPI.Extensions
 {
     public static class ServicesConfiguration
     {
-
         public static void ConfigureRepositories(IServiceCollection services, string connString)
         {         
             services.AddDbContext<CustomerContext>(c =>
